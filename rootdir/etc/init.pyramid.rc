@@ -74,8 +74,8 @@ on fs
     # Force loading of modem and Q6 images
     write /dev/smd_pkt_loopback 1          
     
-   # link widevine drm library path
-   symlink /system/vendor/lib /vendor/lib
+    # link widevine drm library path
+    symlink /system/vendor/lib /vendor/lib
 
     # wifi
     mkdir /data/misc/wifi 0770 wifi wifi
