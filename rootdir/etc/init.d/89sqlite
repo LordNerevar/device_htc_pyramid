@@ -1,0 +1,52 @@
+#!/system/bin/sh
+
+######################
+# DON'T MODIFY BELOW #
+######################
+
+# $ANDROID_DATA is android environment variable
+LOGFILE="$ANDROID_DATA/$(basename $0).log"
+
+log() {
+    if [ -n "$LOGFILE" ] ; then
+        echo $@ >> "$LOGFILE"
+    fi
+}
+
+logrun() {
+    if [ -n "$LOGFILE" ] ; then
+        $@ >> "$LOGFILE" 2>&1
+    else
+        $@
+    fi
+}
+
+vacuum_reindex() {
+    DIR=$1
+    if [ ! -d "$DIR" ] ; then
+        log "- - - $DIR is not a directory - - -"
+        return
+    fi
+    log "- - - Begin optimizing databases under $DIR - - -"
+    DATABASES=`busybox find $DIR -iname "*.db"`
+    if [ -n "$DATABASES" ] ; then
+        for i in $DATABASES ; do
+            log "- - - optimizing $i - - -"
+            logrun /system/xbin/sqlite3 $i 'VACUUM;'
+            logrun /system/xbin/sqlite3 $i 'REINDEX;'
+        done
+    fi
+    log "- - - End optimizing databases under $DIR - - -"
+}
+
+#wait for boot to complete
+sleep 30
+
+if [ -n "$LOGFILE" ] ; then
+    rm -f "$LOGFILE"
+fi
+
+vacuum_reindex /data
+vacuum_reindex /dbdata
+vacuum_reindex /datadata
+vacuum_reindex /sdcard/Android

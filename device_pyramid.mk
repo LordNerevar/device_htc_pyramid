@@ -93,6 +93,12 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml
 
+# Init scripts
+PRODUCT_COPY_FILES += \
+    device/htc/pyramid/rootdir/etc/init.d/89kernel:system/etc/init.d/89kernel \
+    device/htc/pyramid/rootdir/etc/init.d/89sqlite:system/etc/init.d/89sqlite \
+    device/htc/pyramid/rootdir/etc/init.d/89swap:system/etc/init.d/89swap
+
 # Bluetooth firmware
 $(call inherit-product, device/htc/msm8660-common/bcm_hcd.mk)
 

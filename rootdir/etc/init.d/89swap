@@ -1,0 +1,79 @@
+#!/system/bin/sh
+#----------------------------------------
+# Hard Swap activation by Yank555.lu v2.3
+#----------------------------------------
+# Added dynamic swap partition lookup
+#----------------------------------------
+
+# $ANDROID_DATA is android environment variable
+LOGFILE="$ANDROID_DATA/$(basename $0).log"
+
+sdcard_device="/dev/block/mmcblk1"
+swap_partition=`/system/xbin/fdisk -l $sdcard_device | /system/xbin/grep swap | /system/xbin/awk '{print $1;}'`
+swappiness=20
+sdcard_wait=30
+
+log () {
+    if [ -n "$LOGFILE" ] ; then
+        echo $@ >> "$LOGFILE"
+    fi
+}
+
+logrun() {
+    if [ -n "$LOGFILE" ] ; then
+        $@ >> "$LOGFILE" 2>&1
+    else
+        $@
+    fi
+}
+
+activate_swap () {
+   log "- - - SD-card partition table - - -"
+   logrun /system/xbin/fdisk -l $sdcard_device
+
+   log "- - - before activating swap - - -"
+   logrun free
+   log "- - - - - - - - - - - - - - - - - - - -"
+   logrun cat /proc/swaps
+
+   log "- - - activating swap now - - -"
+   log "swapon $swap_partition"
+   logrun /system/xbin/swapon $swap_partition
+
+   log "- - - setting swappiness to $swappiness - - -"
+   if [ -n "$LOGFILE" ] ; then
+       echo $swappiness > /proc/sys/vm/swappiness 2>>"$LOGFILE"
+   else
+       echo $swappiness > /proc/sys/vm/swappiness
+   fi
+
+   log "- - - after activating swap - - -"
+   logrun free
+   log "- - - - - - - - - - - - - - - - - - - -"
+   logrun cat /proc/swaps
+   log "- - - - - - - - - - - - - - - - - - - -"
+}
+
+if [ -n "$LOGFILE" ] ; then
+    rm -f "$LOGFILE"
+fi
+
+# Try to use swap partition
+if [ "$swap_partition" != "" ] ; then
+    log "SD-card swap partition found!"
+    if [ -e $swap_partition ] ; then
+        log "SD-card swap partition device found as well!"
+        activate_swap
+    else
+        log "SD-card swap partition device not present yet. Waiting another $sdcard_wait seconds for SD-card to become ready."
+        logrun sleep $sdcard_wait
+        if [ -e $swap_partition ] ; then
+            log "SD-card swap partition device is present now!"
+            activate_swap
+        else
+            log "Still no swap partition device available after $sdcard_wait seconds, quitting!"
+        fi
+    fi
+else
+    log "No SD-card swap partition has been found, quitting!"
+fi

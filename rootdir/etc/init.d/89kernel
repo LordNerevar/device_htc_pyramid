@@ -1,0 +1,169 @@
+#!/system/bin/sh
+
+# Governor
+# badass, conservative, hyper, intellidemand,
+# interactive, lionheart, ondemand, performance,
+# powersave, smartmax, userspace
+CPUGOV=smartmax
+
+# Adjust these only if you want to have a different
+# governor for each core.
+CPU0GOV=$CPUGOV
+CPU1GOV=$CPUGOV
+
+# I/O Scheduler for internal partitions
+# cfq, deadline, fiops, noop, row, sio, vr, zen
+IOSCHED=fiops
+
+# Adjust these only if you want to have a different
+# scheduler for internal and sdcard.
+IOSCHEDINT=$IOSCHED
+IOSCHEDSDC=$IOSCHED
+
+# Max/Min CPU frequency per core in KHz
+# 192000, 384000, 432000, 486000, 540000, 594000,
+# 648000, 702000, 756000, 810000, 864000, 918000,
+# 970000, 1026000, 1080000, 1134000, 1188000, 1242000,
+# 1296000, 1350000, 1404000, 1458000, 1512000
+CPUMIN=192000
+CPUMAX=1512000
+
+# Adjust these only if you want to have a different
+# min/max setting for each core.
+CPU0MIN=$CPUMIN
+CPU1MIN=$CPUMIN
+CPU0MAX=$CPUMAX
+CPU1MAX=$CPUMAX
+
+# Max GPU 3D frequency
+# 266667000, 228571000, 200000000, 177778000
+GPU3DMAX=266667000
+
+# Fast Charge
+# 0 = Disabled
+# 1 = Enabled
+# 2 = Enabled unless on USB
+FASTCHARGE=2
+
+# Multi-Core Scheduler for power savings
+# 0 = no power savings
+# 1 = fill one thread/core/pkg first for long running threads
+# 2 = also bias task wakeups to semi-idle cpu pkg
+MCSCHED=2
+
+# Vibrator Voltage Level (controls intensity)
+# range is whole number between 0 and 10
+# 0 is not off
+VIBEVOLT=0
+
+# Volume Rocker Wake
+# 0 = Disabled
+# 1 = Enabled
+VOLWAKEUP=1
+
+# Input Boost
+# 0 = Disabled
+# 1 = Enabled
+# This allows mpdecision to control the CPU minimum
+# frequencies based on your usage or "input". It is
+# disabled by default because smartmax has a similar
+# concept known as touch poke.
+# If you don't use smartmax and experience lag, try
+# enabling this setting.
+INPUTBOOST=0
+
+# Optimize TCP buffer sizes
+# 0 = Disabled
+# 1 = Enabled
+TCPBUFF=1
+
+######################
+# DON'T MODIFY BELOW #
+######################
+
+# $ANDROID_DATA is android environment variable
+LOGFILE=$ANDROID_DATA/$(basename $0).log
+
+log () {
+    if [ -n "$LOGFILE" ] ; then
+        echo $@ >> "$LOGFILE"
+    fi
+}
+
+logrun() {
+    if [ -n "$LOGFILE" ] ; then
+        $@ >> "$LOGFILE" 2>&1
+    else
+        $@
+    fi
+}
+
+set_file_value () {
+    if [ $# -ne 2 ] ; then
+        log "ERROR: set_file_value invalid arguments $@"
+        log ""
+        return
+    fi
+
+    FILE=$1
+    VALUE=$2
+
+    if [ ! -f "$FILE" ] ; then
+        log "ERROR: set_file_value invalid file $FILE"
+        log ""
+        return
+    fi
+
+    log "# $FILE #"
+    log "# BEFORE #"
+    logrun cat "$FILE"
+
+    logrun chmod 666 "$FILE"
+    if [ -n "$LOGFILE" ] ; then
+        echo "$VALUE" > "$FILE" 2>>$LOGFILE
+    else
+        echo "$VALUE" > "$FILE"
+    fi
+    logrun chmod 444 "$FILE"
+
+    log "# AFTER #"
+    logrun cat "$FILE"
+    log ""
+}
+
+if [ -n "$LOGFILE" ] ; then
+    rm -f "$LOGFILE"
+fi
+
+set_file_value /sys/kernel/msm_mpdecision/conf/boost_enabled $INPUTBOOST
+set_file_value /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor $CPU0GOV
+set_file_value /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor $CPU1GOV
+set_file_value /sys/block/mmcblk0/queue/scheduler $IOSCHEDINT
+set_file_value /sys/block/mmcblk1/queue/scheduler $IOSCHEDSDC
+set_file_value /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq $CPU0MIN
+set_file_value /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq $CPU0MAX
+set_file_value /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq $CPU1MIN
+set_file_value /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq $CPU1MAX
+set_file_value /sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0/max_gpuclk $GPU3DMAX
+set_file_value /sys/kernel/fast_charge/force_fast_charge $FASTCHARGE
+set_file_value /sys/devices/system/cpu/sched_mc_power_savings $MCSCHED
+if [ "$VIBEVOLT" -ge 0 -a "$VIBEVOLT" -le 10 ] ; then
+    set_file_value /sys/class/timed_output/vibrator/voltage_level $(expr $VIBEVOLT \* 100 + 2000)
+fi
+set_file_value /sys/keyboard/vol_wakeup $VOLWAKEUP
+
+if [ "$TCPBUFF" -eq 1 ] ; then
+    # TCP buffer sizes for various networks - complete list (some unused)
+    # ReadMin, ReadInitial, Readmax, WriteMin, WriteInitial, WriteMax
+    setprop net.tcp.buffersize.edge    "4096,16384,32768,4096,16384,32768"
+    setprop net.tcp.buffersize.evdo    "4096,32768,65536,4096,32768,65536"
+    setprop net.tcp.buffersize.gprs    "4096,8192,16384,4096,8192,16384"
+    setprop net.tcp.buffersize.hsdpa   "4096,32768,65536,4096,32768,65536"
+    setprop net.tcp.buffersize.hspa    "4096,32768,65536,4096,32768,65536"
+    setprop net.tcp.buffersize.hspap   "4096,32768,65536,4096,32768,65536"
+    setprop net.tcp.buffersize.hsupa   "4096,32768,65536,4096,32768,65536"
+    setprop net.tcp.buffersize.lte     "4096,65536,131072,4096,65536,131072"
+    setprop net.tcp.buffersize.umts    "4096,32768,65536,4096,32768,65536"
+    setprop net.tcp.buffersize.wifi    "4096,65536,131072,4096,65536,131072"
+    setprop net.tcp.buffersize.default "4096,65536,131072,4096,65536,131072"
+fi
