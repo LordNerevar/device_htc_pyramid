@@ -77,6 +77,11 @@ INPUTBOOST=0
 # 1 = Enabled
 TCPBUFF=1
 
+# TCP Congestion Algorithm
+# bic cubic highspeed hybla htcp illinois lp reno
+# scalable vegas veno westwood yeah
+TCPCONG=westwood
+
 ######################
 # DON'T MODIFY BELOW #
 ######################
@@ -167,3 +172,4 @@ if [ "$TCPBUFF" -eq 1 ] ; then
     setprop net.tcp.buffersize.wifi    "4096,65536,131072,4096,65536,131072"
     setprop net.tcp.buffersize.default "4096,65536,131072,4096,65536,131072"
 fi
+set_file_value /proc/sys/net/ipv4/tcp_congestion_control $TCPCONG
