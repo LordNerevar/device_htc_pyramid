@@ -20,15 +20,106 @@
 # definition file).
 #
 
-# WARNING: This line must come *before* including the proprietary
-# variant, so that it gets overwritten by the parent (which goes
-# against the traditional rules of inheritance).
-
-# inherit from common msm8660
--include device/htc/msm8660-common/BoardConfigCommon.mk
+BOARD_VENDOR := htc
 
 # Bootloader
+TARGET_NO_BOOTLOADER := true
 TARGET_BOOTLOADER_BOARD_NAME := pyramid
+
+# Platform
+TARGET_BOARD_PLATFORM := msm8660
+TARGET_BOARD_PLATFORM_GPU := qcom-adreno200
+
+# Architecture
+TARGET_CPU_ABI := armeabi-v7a
+TARGET_CPU_ABI2 := armeabi
+TARGET_ARCH := arm
+TARGET_ARCH_VARIANT := armv7-a-neon
+TARGET_CPU_SMP := true
+TARGET_CPU_VARIANT := scorpion
+ARCH_ARM_HAVE_TLS_REGISTER := true
+TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
+
+# Flags
+COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE
+COMMON_GLOBAL_CFLAGS += -DHTCLOG
+COMMON_GLOBAL_CFLAGS += -DQCOM_BSP
+
+# QCOM hardware
+BOARD_USES_QCOM_HARDWARE := true
+TARGET_QCOM_DISPLAY_VARIANT := caf
+TARGET_QCOM_MEDIA_VARIANT := caf
+TARGET_USE_QCOM_BIONIC_OPTIMIZATION := true
+TARGET_USES_QCOM_BSP := true
+
+# Audio
+COMMON_GLOBAL_CFLAGS += -DHTC_ACOUSTIC_AUDIO -DLEGACY_QCOM_VOICE
+TARGET_QCOM_AUDIO_VARIANT := caf
+BOARD_USES_LEGACY_ALSA_AUDIO := true
+BOARD_QCOM_TUNNEL_LPA_ENABLED := true
+BOARD_QCOM_VOIP_ENABLED := true
+
+# Camera
+BOARD_NEEDS_MEMORYHEAPPMEM := true
+COMMON_GLOBAL_CFLAGS += -DDISABLE_HW_ID_MATCH_CHECK
+COMMON_GLOBAL_CFLAGS += -DHTC_CAMERA_HARDWARE
+COMMON_GLOBAL_CFLAGS += -DNEEDS_VECTORIMPL_SYMBOLS
+USE_DEVICE_SPECIFIC_CAMERA := true
+
+# FM Radio
+# 4.2 -> commenting these for audio policy
+#BOARD_HAVE_QCOM_FM := true
+#COMMON_GLOBAL_CFLAGS += -DQCOM_FM_ENABLED
+
+# GPS
+BOARD_USES_QCOM_GPS := true
+BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := pyramid
+BOARD_VENDOR_QCOM_GPS_LOC_API_AMSS_VERSION := 50000
+
+# Graphics
+USE_OPENGL_RENDERER := true
+TARGET_DISPLAY_USE_RETIRE_FENCE := true
+TARGET_USES_C2D_COMPOSITION := true
+TARGET_USES_ION := true
+NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
+BOARD_EGL_CFG := device/htc/pyramid/configs/egl.cfg
+TARGET_DISPLAY_INSECURE_MM_HEAP := true
+
+# Use CM PowerHAL
+TARGET_POWERHAL_VARIANT := cm
+
+# Lights
+TARGET_PROVIDES_LIBLIGHT := true
+
+# SELinux
+BOARD_SEPOLICY_DIRS += \
+	device/htc/pyramid/sepolicy
+
+BOARD_SEPOLICY_UNION += \
+	app.te \
+	bluetooth.te \
+	device.te \
+	domain.te \
+	drmserver.te \
+	file_contexts \
+	file.te \
+	hci_init.te \
+	healthd.te \
+	init_shell.te \
+	init.te \
+	keystore.te \
+	kickstart.te \
+	mediaserver.te \
+	rild.te \
+	surfaceflinger.te \
+	system.te \
+	ueventd.te \
+	wpa_socket.te \
+	wpa.te
+
+# Webkit
+ENABLE_WEBGL := true
+TARGET_FORCE_CPU_UPLOAD := true
 
 # Kernel
 BOARD_KERNEL_BASE := 0x48000000
@@ -41,9 +132,6 @@ TARGET_RECOVERY_FSTAB := device/htc/pyramid/rootdir/etc/fstab.pyramid
 RECOVERY_FSTAB_VERSION := 2
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 RECOVERY_GRAPHICS_USE_LINELENGTH := true
-
-# GPS
-BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := pyramid
 
 # RIL
 BOARD_USES_LEGACY_RIL := true
@@ -64,7 +152,7 @@ BOARD_BLUEDROID_VENDOR_CONF := device/htc/pyramid/bluetooth/vnd_pyramid.txt
 BOARD_BLUETOOTH_USES_HCIATTACH_PROPERTY := false
 
 # Bluetooth/Wifi
--include device/htc/msm8660-common/bcmdhd.mk
+-include device/htc/pyramid/bcmdhd.mk
 
 # External apps on SD
 TARGET_EXTERNAL_APPS = sdcard0

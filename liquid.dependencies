@@ -1,12 +1,7 @@
 [
    {
-     "repository": "LordNerevar/device_htc_msm8660-common",
-     "target_path": "device/htc/msm8660-common",
-     "branch": "kk4.4"
-   },
-   {
-     "repository": "LordNerevar/kernel_htc_msm8660",
-     "target_path": "kernel/htc/msm8660",
+     "repository": "LordNerevar/kernel_htc_pyramid",
+     "target_path": "kernel/htc/pyramid",
      "branch": "kk4.4"
    }
 ]
