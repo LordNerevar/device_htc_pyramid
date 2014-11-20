@@ -65,6 +65,7 @@ COMMON_GLOBAL_CFLAGS += -DDISABLE_HW_ID_MATCH_CHECK
 COMMON_GLOBAL_CFLAGS += -DHTC_CAMERA_HARDWARE
 COMMON_GLOBAL_CFLAGS += -DNEEDS_VECTORIMPL_SYMBOLS
 USE_DEVICE_SPECIFIC_CAMERA := true
+BOARD_CAMERA_FRONT_VGA := true
 
 # FM Radio
 # 4.2 -> commenting these for audio policy
@@ -73,6 +74,7 @@ USE_DEVICE_SPECIFIC_CAMERA := true
 
 # GPS
 BOARD_USES_QCOM_GPS := true
+TARGET_PROVIDES_GPS_LOC_API := true
 BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := pyramid
 BOARD_VENDOR_QCOM_GPS_LOC_API_AMSS_VERSION := 50000
 
@@ -93,29 +95,29 @@ TARGET_PROVIDES_LIBLIGHT := true
 
 # SELinux
 BOARD_SEPOLICY_DIRS += \
-	device/htc/pyramid/sepolicy
+    device/htc/pyramid/sepolicy
 
 BOARD_SEPOLICY_UNION += \
-	app.te \
-	bluetooth.te \
-	device.te \
-	domain.te \
-	drmserver.te \
-	file_contexts \
-	file.te \
-	hci_init.te \
-	healthd.te \
-	init_shell.te \
-	init.te \
-	keystore.te \
-	kickstart.te \
-	mediaserver.te \
-	rild.te \
-	surfaceflinger.te \
-	system.te \
-	ueventd.te \
-	wpa_socket.te \
-	wpa.te
+    app.te \
+    bluetooth.te \
+    device.te \
+    domain.te \
+    drmserver.te \
+    file_contexts \
+    file.te \
+    hci_init.te \
+    healthd.te \
+    init_shell.te \
+    init.te \
+    keystore.te \
+    kickstart.te \
+    mediaserver.te \
+    rild.te \
+    surfaceflinger.te \
+    system.te \
+    ueventd.te \
+    wpa_socket.te \
+    wpa.te
 
 # Webkit
 ENABLE_WEBGL := true
@@ -127,6 +129,7 @@ BOARD_KERNEL_PAGE_SIZE := 2048
 BOARD_KERNEL_CMDLINE := console=ttyHSL0 androidboot.hardware=pyramid no_console_suspend=1
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01400000
 TARGET_KERNEL_CONFIG := pyramid_defconfig
+TARGET_KERNEL_SOURCE := kernel/htc/pyramid
 
 TARGET_RECOVERY_FSTAB := device/htc/pyramid/rootdir/etc/fstab.pyramid
 RECOVERY_FSTAB_VERSION := 2
@@ -159,6 +162,7 @@ TARGET_EXTERNAL_APPS = sdcard0
 
 # Filesystem
 TARGET_USERIMAGES_USE_EXT4 := true
+BOARD_VOLD_MAX_PARTITIONS := 36
 BOARD_BOOTIMAGE_PARTITION_SIZE := 16777216
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 16776192
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 838859776
