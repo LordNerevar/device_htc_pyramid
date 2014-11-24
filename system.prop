@@ -21,6 +21,7 @@ wifi.interface=wlan0
 
 # usb
 persist.sys.usb.config=mtp,adb
+ro.adb.secure=1
 ro.vold.umsdirtyratio=20
 
 # tweaks
