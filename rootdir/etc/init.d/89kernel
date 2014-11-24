@@ -13,7 +13,7 @@ CPU1GOV=$CPUGOV
 
 # I/O Scheduler for internal partitions
 # cfq, deadline, fiops, noop, row, sio, vr, zen
-IOSCHED=row
+IOSCHED=sio
 
 # Adjust these only if you want to have a different
 # scheduler for internal and sdcard.
