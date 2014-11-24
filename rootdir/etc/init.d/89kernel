@@ -82,6 +82,11 @@ TCPBUFF=1
 # scalable vegas veno westwood yeah
 TCPCONG=westwood
 
+# Cooler Colors
+# N = Disabled
+# Y = Enabled
+COOLER=N
+
 ######################
 # DON'T MODIFY BELOW #
 ######################
@@ -123,13 +128,13 @@ set_file_value () {
     log "# BEFORE #"
     logrun cat "$FILE"
 
-    logrun chmod 666 "$FILE"
+    chmod 666 "$FILE" 2>/dev/null
     if [ -n "$LOGFILE" ] ; then
         echo "$VALUE" > "$FILE" 2>>$LOGFILE
     else
         echo "$VALUE" > "$FILE"
     fi
-    logrun chmod 444 "$FILE"
+    chmod 444 "$FILE" 2>/dev/null
 
     log "# AFTER #"
     logrun cat "$FILE"
@@ -173,3 +178,4 @@ if [ "$TCPBUFF" -eq 1 ] ; then
     setprop net.tcp.buffersize.default "4096,65536,131072,4096,65536,131072"
 fi
 set_file_value /proc/sys/net/ipv4/tcp_congestion_control $TCPCONG
+set_file_value /sys/module/mdp/parameters/mdp_gamma_cooler_colors $COOLER
