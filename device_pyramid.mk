@@ -214,7 +214,8 @@ PRODUCT_COPY_FILES += \
 
 # Permissions
 PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml
+    frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
+    device/htc/pyramid/rootdir/etc/permissions/platform.xml:system/etc/permissions/platform.xml
 
 # Init scripts
 PRODUCT_COPY_FILES += \
