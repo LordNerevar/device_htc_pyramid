@@ -20,7 +20,8 @@ on init
     setprop ro.usb.idproduct.mtp_adb 0f87
     setprop ro.usb.idproduct.ptp 0f87
 
-    export EXTERNAL_STORAGE /storage/sdcard0    
+    export EXTERNAL_STORAGE /storage/sdcard0
+    export SECONDARY_STORAGE /storage/usbdisk
 
 on fs
 
@@ -113,6 +114,14 @@ on boot
     chown system system /sys/devices/platform/msm_sdcc.3/polling
     chown system system /sys/devices/platform/msm_sdcc.4/polling
 
+    # Dummy command to open() /dev/smd0 and not attempt to read any bytes from it
+    #
+    # This causes smd_tty_open() in arch/arm/mach-msm/smd_tty.c to load
+    # the modem firmware early. This is necessary to avoid a race condition
+    # where in-call audio dies if a phone call is made before initialization
+    # has finished.
+    exec /system/xbin/busybox dd if=/dev/smd0 of=/dev/null bs=1 count=1 skip=1
+
     # bluetooth power up/down interface
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
@@ -131,9 +140,6 @@ on boot
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
     mkdir /data/misc/dhcp 0770 dhcp dhcp
     chown dhcp dhcp /data/misc/dhcp
-
-    # symlink for HDMI
-    symlink /dev/graphics/fb1 /dev/graphics/hdmi
 
     # audio
     mkdir /data/audio 2770 media audio
@@ -181,6 +187,8 @@ on boot
     chown radio radio /sys/class/htc_accelerometer/accelerometer/PhoneOnOffFlag
     chown radio radio /sys/class/htc_ecompass/ecompass/PhoneOnOffFlag
 
+    write /sys/module/subsystem_restart/parameters/restart_level 3
+
     chown system graphics /sys/class/graphics/fb1/format_3d
     chown system graphics /sys/class/graphics/fb1/hpd
     chown system graphics /sys/class/graphics/fb1/product_description
@@ -191,8 +199,7 @@ on boot
     chmod 0664 /sys/class/graphics/fb1/product_description
     chmod 0664 /sys/class/graphics/fb1/vendor_name
     chmod 0664 /sys/class/graphics/fb1/video_mode
-
-    write /sys/module/subsystem_restart/parameters/restart_level 3
+    symlink /dev/graphics/fb1 /dev/graphics/hdmi
 
     # HDMID Permission for sys nodes
     chown system graphics /sys/class/graphics/fb1/connected
@@ -222,6 +229,10 @@ on boot
     # Vibration intensity
     chown root system /sys/class/timed_output/vibrator/voltage_level
     chmod 0664 /sys/class/timed_output/vibrator/voltage_level
+
+    # Color temp
+    chown system system /sys/module/mdp/parameters/mdp_gamma_cooler_colors
+    chmod 0664 /sys/module/mdp/parameters/mdp_gamma_cooler_colors
 
 # Services start here
 service qcamerasvr /system/bin/mm-qcamera-daemon
@@ -329,9 +340,6 @@ on property:service.adb.root=1
     restart adbd
     write /sys/class/android_usb/android0/enable 1
 
-on property:sys.radio.shutdown=true
-    exec /system/bin/sh /system/etc/init.qcom.efs.sync.sh
-
 on property:sys.boot_completed=1
     write /sys/module/rpm_resources/enable_low_power/L2_cache 1
     write /sys/module/rpm_resources/enable_low_power/pxo 1
@@ -358,4 +366,7 @@ on property:sys.boot_completed=1
     write /sys/module/pm_8660/modes/cpu0/standalone_power_collapse/idle_enabled 1
     write /sys/module/pm_8660/modes/cpu1/standalone_power_collapse/idle_enabled 1
     write /dev/cpuctl/apps/cpu.notify_on_migrate 1
-    start thermald
+
+on property:sys.radio.shutdown=true
+    exec /system/bin/sh /system/etc/init.qcom.efs.sync.sh
+
