@@ -18,6 +18,7 @@ ro.ril.fast.dormancy.rule=2
 
 # wifi
 wifi.interface=wlan0
+wifi.supplicant_scan_interval=180
 
 # usb
 persist.sys.usb.config=mtp,adb
@@ -35,7 +36,6 @@ hs.app_process=16m
 debug.sf.hw=1
 debug.egl.profiler=1
 debug.egl.hw=1
-debug.composition.type=gpu
 hwui.blacklist=0
 persist.sys.ui.hw=1
 ro.config.nocheckin=1
