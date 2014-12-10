@@ -153,6 +153,10 @@ ALOGV("%s: original parameters:", __FUNCTION__);
         /* Fix rotation for snaps during vertical videos. Snaps will be
          * horizontal but at least they're not corrupted. */
         params.set(android::CameraParameters::KEY_ROTATION, "0");
+    } else {
+        /* Disable OIS */
+        params.set(android::CameraParameters::KEY_OIS_SUPPORT, "false");
+        params.set(android::CameraParameters::KEY_OIS_MODE, "off");
     }
 
     /* Back camera */
