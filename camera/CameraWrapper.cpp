@@ -145,18 +145,14 @@ ALOGV("%s: original parameters:", __FUNCTION__);
     /* Disable denoise */
     params.set(android::CameraParameters::KEY_SUPPORTED_DENOISE, "off");
 
+    /* Disable OIS */
+    params.set(android::CameraParameters::KEY_OIS_SUPPORT, "false");
+    params.set(android::CameraParameters::KEY_OIS_MODE, "off");
+
     /* Video settings */
     if (!strcmp(params.get(android::CameraParameters::KEY_RECORDING_HINT), "true")) {
         /* Enable video stabilization */
         params.set(android::CameraParameters::KEY_VIDEO_STABILIZATION, "true");
-
-        /* Fix rotation for snaps during vertical videos. Snaps will be
-         * horizontal but at least they're not corrupted. */
-        params.set(android::CameraParameters::KEY_ROTATION, "0");
-    } else {
-        /* Disable OIS */
-        params.set(android::CameraParameters::KEY_OIS_SUPPORT, "false");
-        params.set(android::CameraParameters::KEY_OIS_MODE, "off");
     }
 
     /* Back camera */
