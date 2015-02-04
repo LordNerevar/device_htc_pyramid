@@ -87,6 +87,12 @@ TCPCONG=westwood
 # Y = Enabled
 COOLER=N
 
+# Low memory killer settings
+# ADJ defaults: 0,58,117,176,529,1000
+# MINFREE defaults: 9856,12441,15027,17856,20441,25369
+LMK_ADJ=0,58,117,176,529,1000
+LMK_MINFREE=9856,12441,15027,17856,20441,25369
+
 ######################
 # DON'T MODIFY BELOW #
 ######################
@@ -179,3 +185,5 @@ if [ "$TCPBUFF" -eq 1 ] ; then
 fi
 set_file_value /proc/sys/net/ipv4/tcp_congestion_control $TCPCONG
 set_file_value /sys/module/mdp/parameters/mdp_gamma_cooler_colors $COOLER
+set_file_value /sys/module/lowmemorykiller/parameters/adj $LMK_ADJ
+set_file_value /sys/module/lowmemorykiller/parameters/minfree $LMK_MINFREE
