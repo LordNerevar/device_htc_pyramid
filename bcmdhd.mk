@@ -25,4 +25,5 @@ WIFI_DRIVER_FW_PATH_PARAM        := "/sys/module/bcmdhd/parameters/firmware_path
 WPA_SUPPLICANT_VERSION           := VER_0_8_X
 
 # Broadcom BCM43xx chips are WiFi/BT capable
+BOARD_HAVE_BLUETOOTH             := true
 BOARD_HAVE_BLUETOOTH_BCM         := true

@@ -15,4 +15,5 @@
 # Copy Bluetooth firmware, since BCM4329 is a BT/WiFi chip
 PRODUCT_COPY_FILES += \
     device/htc/pyramid/firmware/bcm4330.hcd:system/vendor/firmware/bcm4330.hcd \
-    device/htc/pyramid/firmware/bcm4329.hcd:system/vendor/firmware/bcm4329.hcd
+    device/htc/pyramid/firmware/bcm4329.hcd:system/vendor/firmware/bcm4329.hcd \
+    device/htc/pyramid/bluetooth/bt_vendor.conf:system/etc/bluetooth/bt_vendor.conf
