@@ -113,6 +113,8 @@ BOARD_SEPOLICY_UNION += \
     keystore.te \
     kickstart.te \
     mediaserver.te \
+    property_contexts \
+    recovery.te \
     rild.te \
     surfaceflinger.te \
     system.te \
@@ -169,6 +171,7 @@ RECOVERY_FSTAB_VERSION := 2
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 RECOVERY_GRAPHICS_USE_LINELENGTH := true
 TARGET_RECOVERY_DEVICE_DIRS += device/htc/pyramid
+TARGET_RECOVERY_DEVICE_MODULES += chargeled
 BOARD_RECOVERY_SWIPE := true
 TARGET_RECOVERY_LCD_BACKLIGHT_PATH := \"/sys/class/leds/lcd-backlight/brightness\"
 
