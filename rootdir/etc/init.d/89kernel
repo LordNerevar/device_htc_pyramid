@@ -93,6 +93,11 @@ COOLER=N
 LMK_ADJ=0,58,117,176,529,1000
 LMK_MINFREE=9856,12441,15027,17856,20441,25369
 
+# Kernel Same-page Merging
+# 0 = Disabled
+# 1 = Enabled
+KSM=1
+
 ######################
 # DON'T MODIFY BELOW #
 ######################
@@ -187,3 +192,10 @@ set_file_value /proc/sys/net/ipv4/tcp_congestion_control $TCPCONG
 set_file_value /sys/module/mdp/parameters/mdp_gamma_cooler_colors $COOLER
 set_file_value /sys/module/lowmemorykiller/parameters/adj $LMK_ADJ
 set_file_value /sys/module/lowmemorykiller/parameters/minfree $LMK_MINFREE
+
+if [ "$KSM" -eq 1 ] ; then
+    set_file_value /sys/kernel/mm/ksm/deferred_timer 1
+    set_file_value /sys/kernel/mm/ksm/pages_to_scan 100
+    set_file_value /sys/kernel/mm/ksm/sleep_millisecs 500
+    set_file_value /sys/kernel/mm/ksm/run 1
+fi
