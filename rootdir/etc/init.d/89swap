@@ -10,7 +10,7 @@ LOGFILE="$ANDROID_DATA/$(basename $0).log"
 
 sdcard_device="/dev/block/mmcblk1"
 swap_partition=`/system/xbin/fdisk -l $sdcard_device | /system/xbin/grep swap | /system/xbin/awk '{print $1;}'`
-swappiness=20
+swappiness=60
 sdcard_wait=30
 
 log () {
