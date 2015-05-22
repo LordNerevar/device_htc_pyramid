@@ -56,7 +56,7 @@ PRODUCT_COPY_FILES += \
 
 # GPS
 PRODUCT_COPY_FILES += \
-    device/common/gps/gps.conf_US_SUPL:system/etc/gps.conf
+    device/htc/pyramid/rootdir/etc/gps.conf:system/etc/gps.conf
 
 # Graphics
 PRODUCT_PACKAGES += \
