@@ -71,9 +71,8 @@ USE_DEVICE_SPECIFIC_CAMERA := true
 BOARD_CAMERA_FRONT_VGA := true
 
 # FM Radio
-# 4.2 -> commenting these for audio policy
-#BOARD_HAVE_QCOM_FM := true
-#COMMON_GLOBAL_CFLAGS += -DQCOM_FM_ENABLED
+BOARD_HAVE_QCOM_FM := true
+QCOM_FM_ENABLED := true
 
 # GPS
 BOARD_USES_QCOM_GPS := true
