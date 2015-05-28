@@ -1,7 +1,7 @@
 #!/system/bin/sh
 
 # Governor
-# badass, conservative, hyper, intellidemand,
+# badass, conservative, hyper, intelliactive,
 # interactive, lionheart, ondemand, performance,
 # powersave, smartmax, userspace
 CPUGOV=smartmax
