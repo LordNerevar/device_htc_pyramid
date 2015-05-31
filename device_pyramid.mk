@@ -112,6 +112,10 @@ PRODUCT_PACKAGES += \
     libnetcmdiface \
     crda
 
+# Bluetooth
+PRODUCT_PACKAGES += \
+    bt_vendor.conf
+
 # Media configuration
 PRODUCT_COPY_FILES += \
     device/htc/pyramid/configs/media_codecs.xml:system/etc/media_codecs.xml \
