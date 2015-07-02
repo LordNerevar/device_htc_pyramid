@@ -140,8 +140,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.sf.hw=1 \
     dev.pm.dyn_samplingrate=1 \
     ro.opengles.version=131072 \
-    debug.egl.recordable.rgba8888=1 \
-    ro.config.low_ram=true
+    debug.egl.recordable.rgba8888=1
+#
+#ro.config.low_ram=true
 
 # Camera wrapper
 PRODUCT_PACKAGES += \
@@ -156,7 +157,6 @@ PRODUCT_PACKAGES += \
     init.pyramid.usb.rc \
     ueventd.pyramid.rc \
     gps.pyramid
-
 
 # Wifi
 $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4329/device-bcm.mk)
@@ -215,7 +215,6 @@ PRODUCT_COPY_FILES += \
 # Init scripts
 PRODUCT_COPY_FILES += \
     device/htc/pyramid/rootdir/etc/init.d/89kernel:system/etc/init.d/89kernel \
-    device/htc/pyramid/rootdir/etc/init.d/89sqlite:system/etc/init.d/89sqlite \
     device/htc/pyramid/rootdir/etc/init.d/89swap:system/etc/init.d/89swap
 
 # Bluetooth firmware
