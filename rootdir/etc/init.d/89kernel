@@ -12,7 +12,7 @@ CPU0GOV=$CPUGOV
 CPU1GOV=$CPUGOV
 
 # I/O Scheduler for internal partitions
-# cfq, deadline, fiops, noop, row, sio, vr, zen
+# bfq, cfq, deadline, fiops, noop, row, sio, vr, zen
 IOSCHED=fiops
 
 # Adjust these only if you want to have a different
@@ -196,7 +196,7 @@ set_file_value /sys/devices/platform/kgsl-2d0.0/kgsl/kgsl-2d0/max_gpuclk $GPU2DM
 set_file_value /sys/devices/platform/kgsl-2d0.0/kgsl/kgsl-2d0/gpuclk $GPU2DMIN
 set_file_value /sys/devices/platform/kgsl-2d1.1/kgsl/kgsl-2d1/max_gpuclk $GPU2DMAX
 set_file_value /sys/devices/platform/kgsl-2d1.1/kgsl/kgsl-2d1/gpuclk $GPU2DMIN
-set_file_value /sys/kernel/fast_charge/force_fast_charge $FASTCHARGE
+#set_file_value /sys/kernel/fast_charge/force_fast_charge $FASTCHARGE
 set_file_value /sys/devices/system/cpu/sched_mc_power_savings $MCSCHED
 if [ "$VIBEVOLT" -ge 0 -a "$VIBEVOLT" -le 10 ] ; then
     set_file_value /sys/class/timed_output/vibrator/voltage_level $(expr $VIBEVOLT \* 100 + 2000)
