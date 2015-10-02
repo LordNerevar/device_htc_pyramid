@@ -114,7 +114,6 @@ BOARD_SEPOLICY_UNION += \
     kickstart.te \
     mediaserver.te \
     property_contexts \
-    recovery.te \
     rild.te \
     surfaceflinger.te \
     system.te \
@@ -175,16 +174,15 @@ TARGET_RECOVERY_DEVICE_DIRS += device/htc/pyramid
 TARGET_RECOVERY_DEVICE_MODULES += chargeled
 BOARD_RECOVERY_SWIPE := true
 TARGET_RECOVERY_LCD_BACKLIGHT_PATH := \"/sys/class/leds/lcd-backlight/brightness\"
+RECOVERY_SDCARD_ON_DATA := true
 
 # Twrp
 DEVICE_RESOLUTION = 540x960
 TW_FLASH_FROM_STORAGE := true
-TW_INTERNAL_STORAGE_PATH := "/sdcard"
-TW_INTERNAL_STORAGE_MOUNT_POINT := "sdcard"
-TW_INCLUDE_JB_CRYPTO := true
-TW_FLASH_FROM_STORAGE := true
-TW_INTERNAL_STORAGE_PATH := "/sdcard"
-TW_INTERNAL_STORAGE_MOUNT_POINT := "sdcard"
+TW_INTERNAL_STORAGE_PATH := "/data/media"
+TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
+TW_EXTERNAL_STORAGE_PATH := "/sdcard1"
+TW_EXTERNAL_STORAGE_MOUNT_POINT := "sdcard1"
 TW_INCLUDE_JB_CRYPTO := true
 TW_NO_SCREEN_BLANK := true
 TW_INCLUDE_DUMLOCK := true
