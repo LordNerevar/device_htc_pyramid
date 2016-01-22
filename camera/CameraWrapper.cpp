@@ -162,13 +162,30 @@ static char *camera_fixup_setparams(int id, const char *settings)
     /* Set correct caf-focus-mode */
     const char* focusAreas = params.get(android::CameraParameters::KEY_FOCUS_AREAS);
 
-    if(focusAreas && strcmp(focusAreas, "(0,0,0,0,0)"))
+    if (focusAreas && strcmp(focusAreas, "(0,0,0,0,0)"))
         params.set("caf-focus-mode", "touch");
     else
         params.set("caf-focus-mode", "default");
 
-    bool isVideo = !strcmp(params.get(android::CameraParameters::KEY_RECORDING_HINT), "true");
+    /* Back Camera */
+    if (id == 0) {
+        // remove continuous-video, infinity as they are blurry
+        if (params.get(android::CameraParameters::KEY_SUPPORTED_FOCUS_MODES)) {
+            params.set(android::CameraParameters::KEY_SUPPORTED_FOCUS_MODES,
+                    "auto,macro,fixed,face-priority");
+        }
+    } else if (id == 1) {
+        // Force 640x480 preview size
+        params.remove(android::CameraParameters::KEY_SUPPORTED_VIDEO_SIZES);
+        params.remove(android::CameraParameters::KEY_PREFERRED_PREVIEW_SIZE_FOR_VIDEO);
+        params.set(android::CameraParameters::KEY_PREFERRED_PREVIEW_SIZE_FOR_VIDEO,
+                "640x480");
+    }
 
+    // Fix rotation mismatch
+    //   - without this pics/videos are upside down or completely corrupted
+    bool isVideo = !strcmp(params.get(android::CameraParameters::KEY_RECORDING_HINT),
+            "true");
     if (isVideo) {
         params.set(android::CameraParameters::KEY_ROTATION, "0");
     }
@@ -182,9 +199,7 @@ static char *camera_fixup_setparams(int id, const char *settings)
     if (fixed_set_params[id])
         free(fixed_set_params[id]);
     fixed_set_params[id] = strdup(strParams.string());
-    char *ret = fixed_set_params[id];
-
-    return ret;
+    return fixed_set_params[id];
 }
 
 /*******************************************************************
@@ -353,7 +368,6 @@ static int camera_auto_focus(struct camera_device *device)
 
     if (!device)
         return -EINVAL;
-
 
     return VENDOR_CALL(device, auto_focus);
 }
