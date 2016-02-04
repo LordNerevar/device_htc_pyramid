@@ -114,7 +114,7 @@ on post-fs-data
 
 on boot
     # for systrace
-    mount debugfs /sys/kernel/debug /sys/kernel/debug
+    mount debugfs debugfs /sys/kernel/debug
 
     # Chown polling nodes as needed from UI running on system server
     chmod 0664 /sys/devices/platform/msm_sdcc.1/polling
